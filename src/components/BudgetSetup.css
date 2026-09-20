@@ -1,0 +1,127 @@
+.budget-setup {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 1.5rem;
+  font-family: sans-serif;
+  color: #1a1a1a;
+}
+
+.budget-setup h1 {
+  font-size: 1.75rem;
+  margin-bottom: 1rem;
+}
+
+.card {
+  background: #ffffff;
+  border: 1px solid #e2e2e2;
+  border-radius: 12px;
+  padding: 1.25rem;
+  margin-bottom: 1.25rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.card h2 {
+  font-size: 1.1rem;
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+}
+
+.field:last-child {
+  margin-bottom: 0;
+}
+
+.field label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 0.35rem;
+  color: #444;
+}
+
+.field input,
+.field select {
+  padding: 0.6rem 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+.field-row {
+  display: flex;
+  gap: 1rem;
+}
+
+.field-row .field {
+  flex: 1;
+}
+
+.category-field {
+  margin-bottom: 0.85rem;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1.05rem;
+  margin-bottom: 0.5rem;
+}
+
+.summary-row.negative {
+  color: #c0392b;
+  font-weight: 700;
+}
+
+.error-message {
+  background: #fdecea;
+  color: #c0392b;
+  border: 1px solid #f5b7b1;
+  padding: 0.75rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  margin: 0.75rem 0;
+}
+
+.success-message {
+  background: #e8f5e9;
+  color: #256428;
+  border: 1px solid #a5d6a7;
+  padding: 0.75rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  margin: 0.75rem 0;
+}
+
+.save-button {
+  width: 100%;
+  padding: 0.75rem;
+  background: #2e7d32;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 0.5rem;
+}
+
+.save-button:disabled {
+  background: #aaa;
+  cursor: not-allowed;
+}
+
+.save-button:hover:not(:disabled) {
+  background: #256428;
+}
+
+/* Mobile: stack month/year instead of side-by-side */
+@media (max-width: 480px) {
+  .field-row {
+    flex-direction: column;
+    gap: 0;
+  }
+}
