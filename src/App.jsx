@@ -1,7 +1,7 @@
-import BudgetSetup from "./components/BudgetSetup";
+import Dashboard from "./components/Dashboard";
 
 function App() {
-  return <BudgetSetup />;
+  return <Dashboard />;
 }
 
 export default App;
