@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import "./BudgetSetup.css";
 
@@ -11,6 +12,100 @@ const MONTHS = [
 // Converts a frontend label like "Self Care" into the backend enum value "SELF_CARE"
 function toBackendCategory(categoryLabel) {
   return categoryLabel.toUpperCase().replace(/ /g, "_");
+}
+
+// Saves the total monthly budget. Tries POST (create) first; if one already
+// exists for this month/year (409 Conflict), retries with PUT (update) instead.
+async function saveMonthlyBudget(amount, month, year) {
+  const body = JSON.stringify({ amount, month, year });
+
+  const postResponse = await fetch("http://localhost:8080/api/monthly-budget", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body,
+  });
+
+  if (postResponse.ok) {
+    return;
+  }
+
+  if (postResponse.status === 409) {
+    const putResponse = await fetch("http://localhost:8080/api/monthly-budget", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body,
+    });
+
+    if (!putResponse.ok) {
+      const errorText = await putResponse.text();
+      throw new Error(`Monthly budget: ${errorText || "Failed to update."}`);
+    }
+
+    return;
+  }
+
+  const errorText = await postResponse.text();
+  throw new Error(`Monthly budget: ${errorText || "Failed to save."}`);
+}
+
+// Fetches existing category budgets for this month/year and returns a lookup
+// of backend category name -> its existing id (e.g. { FOOD: 3, RENT: 7 }).
+async function fetchExistingCategoryIds(month, year) {
+  const response = await fetch(
+    `http://localhost:8080/api/budgets?month=${month}&year=${year}`
+  );
+
+  if (!response.ok) {
+    throw new Error("Could not check existing category budgets.");
+  }
+
+  const existingBudgets = await response.json();
+
+  const idsByCategory = {};
+  for (const budget of existingBudgets) {
+    idsByCategory[budget.category] = budget.id;
+  }
+
+  return idsByCategory;
+}
+
+// Creates a new category budget, or updates the existing one if an id is given.
+async function saveCategoryBudget(category, amount, month, year, existingId) {
+  const backendCategory = toBackendCategory(category);
+
+  if (existingId) {
+    const response = await fetch(
+      `http://localhost:8080/api/budgets/${existingId}`,
+      {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ amount }),
+      }
+    );
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`${category}: ${errorText || "Failed to update."}`);
+    }
+
+    return;
+  }
+
+  const response = await fetch("http://localhost:8080/api/budgets", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      category: backendCategory,
+      amount,
+      month,
+      year,
+    }),
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`${category}: ${errorText || "Failed to save."}`);
+  }
 }
 
 function BudgetSetup() {
@@ -57,42 +152,48 @@ function BudgetSetup() {
     setSaveStatus("saving");
     setSaveMessage("");
 
-    // Only send categories where the user actually entered an amount greater than 0
-    const categoriesToSave = CATEGORIES.filter(
-      (category) => toNumber(categoryAmounts[category]) > 0
-    );
-
-    if (categoriesToSave.length === 0) {
-      setSaveStatus("error");
-      setSaveMessage("Enter at least one category amount before saving.");
-      return;
-    }
-
     try {
-      for (const category of categoriesToSave) {
-        const response = await fetch("http://localhost:8080/api/budgets", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            category: toBackendCategory(category),
-            amount: toNumber(categoryAmounts[category]),
-            month,
-            year,
-          }),
-        });
+      // Step 1: save the total monthly budget first.
+      if (totalBudgetNumber > 0) {
+        await saveMonthlyBudget(totalBudgetNumber, month, year);
+      }
 
-        if (!response.ok) {
-          // The backend sends a plain text error message (e.g. duplicate budget, bad amount)
-          const errorText = await response.text();
-          throw new Error(`${category}: ${errorText || "Failed to save."}`);
-        }
+      // Step 2: figure out which categories already exist for this month/year.
+      const categoriesToSave = CATEGORIES.filter(
+        (category) => toNumber(categoryAmounts[category]) > 0
+      );
+
+      if (categoriesToSave.length === 0 && totalBudgetNumber === 0) {
+        setSaveStatus("error");
+        setSaveMessage(
+          "Enter a monthly budget or at least one category amount before saving."
+        );
+        return;
+      }
+
+      const existingIdsByCategory = await fetchExistingCategoryIds(month, year);
+
+      // Step 3: save each non-zero category, updating if it already exists.
+      for (const category of categoriesToSave) {
+        const backendCategory = toBackendCategory(category);
+        const existingId = existingIdsByCategory[backendCategory];
+
+        await saveCategoryBudget(
+          category,
+          toNumber(categoryAmounts[category]),
+          month,
+          year,
+          existingId
+        );
       }
 
       setSaveStatus("success");
       setSaveMessage("Budget saved successfully!");
     } catch (err) {
       setSaveStatus("error");
-      setSaveMessage(err.message || "Something went wrong while saving. Please try again.");
+      setSaveMessage(
+        err.message || "Something went wrong while saving. Please try again."
+      );
     }
   };
 
@@ -162,6 +263,7 @@ function BudgetSetup() {
           <span>Total Allocated</span>
           <span>{totalAllocated.toFixed(2)}</span>
         </div>
+
         <div className={`summary-row ${isOverBudget ? "negative" : ""}`}>
           <span>Remaining</span>
           <span>{remaining.toFixed(2)}</span>
@@ -169,8 +271,8 @@ function BudgetSetup() {
 
         {isOverBudget && (
           <p className="error-message">
-            You've allocated more than your total monthly budget. Reduce category
-            amounts or increase the monthly budget.
+            You've allocated more than your total monthly budget. Reduce
+            category amounts or increase the monthly budget.
           </p>
         )}
 
@@ -195,3 +297,7 @@ function BudgetSetup() {
 }
 
 export default BudgetSetup;
+
+
+
+

@@ -1,7 +1,7 @@
-import Dashboard from "./components/Dashboard";
+import ExpenseTracker from "./components/ExpenseTracker";
 
 function App() {
-  return <Dashboard />;
+  return <ExpenseTracker />;
 }
 
 export default App;
