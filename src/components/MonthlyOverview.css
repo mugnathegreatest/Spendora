@@ -1,0 +1,271 @@
+.monthly-overview {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  color: #432f2e;
+}
+
+.overview-header {
+  margin-bottom: 20px;
+  padding: 24px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  background: #feefb8;
+  border-radius: 18px;
+  box-shadow: 0 8px 24px rgba(67, 47, 46, 0.09);
+}
+
+.overview-eyebrow,
+.overview-section-eyebrow {
+  margin: 0 0 6px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.6px;
+  color: #756968;
+}
+
+.overview-header h2 {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 700;
+  color: #432f2e;
+}
+
+.overview-symbol {
+  width: 50px;
+  height: 50px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  background: #432f2e;
+  color: #feefb8;
+  font-size: 23px;
+  font-weight: 700;
+}
+
+.overview-main-card {
+  margin-bottom: 20px;
+  padding: 26px 28px;
+  background: #432f2e;
+  color: #ffffff;
+  border-radius: 18px;
+  box-shadow: 0 8px 24px rgba(67, 47, 46, 0.14);
+}
+
+.money-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.money-item {
+  padding: 18px;
+  border-radius: 14px;
+  background: rgba(254, 239, 184, 0.1);
+}
+
+.money-label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.4px;
+  color: #feefb8;
+}
+
+.money-item strong {
+  font-size: 22px;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.progress-section {
+  margin-top: 26px;
+}
+
+.progress-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 9px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.progress-header span:last-child {
+  font-weight: 800;
+  color: #feefb8;
+}
+
+.overview-progress-track {
+  width: 100%;
+  height: 10px;
+  overflow: hidden;
+  border-radius: 20px;
+  background: rgba(196, 218, 232, 0.25);
+}
+
+.overview-progress-fill {
+  height: 100%;
+  border-radius: 20px;
+  background: #feefb8;
+  transition: width 0.4s ease;
+}
+
+.overview-notice,
+.overview-warning,
+.overview-positive {
+  margin-top: 18px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.overview-notice {
+  background: rgba(196, 218, 232, 0.14);
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.overview-warning {
+  background: rgba(249, 232, 229, 0.12);
+  color: #f6c9c3;
+}
+
+.overview-positive {
+  background: rgba(232, 240, 235, 0.12);
+  color: #c9dfd1;
+}
+
+.overview-warning strong,
+.overview-positive strong {
+  color: #feefb8;
+}
+
+.overview-card {
+  margin-bottom: 20px;
+  padding: 26px 28px;
+  background: #ffffff;
+  border: 1px solid #e2d8d1;
+  border-radius: 18px;
+  box-shadow: 0 8px 24px rgba(67, 47, 46, 0.09);
+}
+
+.overview-section-heading {
+  margin-bottom: 22px;
+}
+
+.overview-section-heading h3 {
+  margin: 0;
+  font-size: 20px;
+  color: #432f2e;
+}
+
+.overview-category-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.overview-category-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.overview-category-top span {
+  font-weight: 700;
+  color: #432f2e;
+}
+
+.overview-category-top strong {
+  font-weight: 800;
+  color: #432f2e;
+}
+
+.overview-category-track {
+  width: 100%;
+  height: 8px;
+  overflow: hidden;
+  border-radius: 20px;
+  background: #c4dae8;
+}
+
+.overview-category-fill {
+  height: 100%;
+  border-radius: 20px;
+  background: #432f2e;
+  transition: width 0.3s ease;
+}
+
+.overview-category p {
+  margin: 6px 0 0;
+  font-size: 11px;
+  color: #756968;
+}
+
+.overview-empty,
+.overview-loading,
+.overview-error {
+  margin: 0;
+  padding: 20px;
+  text-align: center;
+  border-radius: 12px;
+  font-size: 14px;
+}
+
+.overview-empty,
+.overview-loading {
+  background: #fdfcf9;
+  color: #756968;
+}
+
+.overview-error {
+  background: #f9e8e5;
+  color: #a9534d;
+}
+
+@media (max-width: 700px) {
+  .overview-header {
+    padding: 21px 20px;
+  }
+
+  .overview-header h2 {
+    font-size: 23px;
+  }
+
+  .overview-symbol {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+  }
+
+  .overview-main-card {
+    padding: 22px 20px;
+  }
+
+  .money-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .money-item {
+    padding: 15px;
+  }
+
+  .money-item strong {
+    font-size: 20px;
+  }
+
+  .overview-card {
+    padding: 21px 20px;
+    border-radius: 15px;
+  }
+}
